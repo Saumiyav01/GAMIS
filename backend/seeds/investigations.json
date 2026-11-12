@@ -1,0 +1,65 @@
+[
+  {
+    "decoy_event_ids": [
+      "L-001",
+      "L-009",
+      "L-010",
+      "L-011",
+      "L-012"
+    ],
+    "expect_disputed": false,
+    "expected_evidence_event_ids": [
+      "L-002",
+      "L-007",
+      "L-008"
+    ],
+    "id": "INV-001",
+    "request": "Investigate suspicious authentication activity on host web-01 around 2026-01-10T08:15Z.",
+    "scope": {
+      "host": "web-01",
+      "indicators": [
+        "203.0.113.50"
+      ]
+    },
+    "title": "Brute force followed by successful login on web-01"
+  },
+  {
+    "decoy_event_ids": [
+      "L-007",
+      "L-008"
+    ],
+    "expect_disputed": true,
+    "expected_evidence_event_ids": [
+      "L-013",
+      "L-014"
+    ],
+    "id": "INV-002",
+    "request": "Assess whether the VPN login from 198.51.100.77 is malicious.",
+    "scope": {
+      "host": "vpn-01",
+      "indicators": [
+        "198.51.100.77"
+      ]
+    },
+    "title": "Conflicting intelligence on a VPN login"
+  },
+  {
+    "decoy_event_ids": [
+      "L-007",
+      "L-008"
+    ],
+    "expect_disputed": false,
+    "expected_evidence_event_ids": [
+      "L-001"
+    ],
+    "id": "INV-003",
+    "request": "Check whether alice's morning login on web-01 is suspicious.",
+    "scope": {
+      "host": "web-01",
+      "indicators": [
+        "198.51.100.10"
+      ]
+    },
+    "title": "Benign routine login (negative control)"
+  }
+]

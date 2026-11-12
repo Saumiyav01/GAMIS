@@ -1,0 +1,23 @@
+[
+  {
+    "indicator": "203.0.113.50",
+    "note": "Known brute-force source (synthetic)",
+    "score": 95,
+    "source": "synthetic-feed-A",
+    "verdict": "malicious"
+  },
+  {
+    "indicator": "198.51.100.77",
+    "note": "Listed on synthetic blocklist",
+    "score": 70,
+    "source": "synthetic-feed-A",
+    "verdict": "malicious"
+  },
+  {
+    "indicator": "198.51.100.77",
+    "note": "Verified corporate VPN egress (synthetic)",
+    "score": 5,
+    "source": "synthetic-feed-B",
+    "verdict": "benign"
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "event_type": "login_success",
+    "host": "web-01",
+    "id": "L-001",
+    "message": "Successful login for alice",
+    "severity": "low",
+    "src_ip": "198.51.100.10",
+    "timestamp": "2026-01-10T08:00:01Z",
+    "user": "alice"
+  },
+  {
+    "event_type": "login_failure",
+    "host": "web-01",
+    "id": "L-002",
+    "message": "Failed password for admin",
+    "severity": "medium",
+    "src_ip": "203.0.113.50",
+    "timestamp": "2026-01-10T08:15:00Z",
+    "user": "admin"
+  },
+  {
+    "event_type": "login_failure",
+    "host": "web-01",
+    "id": "L-003",
+    "message": "Failed password for admin",
+    "severity": "medium",
+    "src_ip": "203.0.113.50",
+    "timestamp": "2026-01-10T08:15:05Z",
+    "user": "admin"
+  },
+  {
+    "event_type": "login_failure",
+    "host": "web-01",
+    "id": "L-004",
+    "message": "Failed password for admin",
+    "severity": "medium",
+    "src_ip": "203.0.113.50",
+    "timestamp": "2026-01-10T08:15:10Z",
+    "user": "admin"
+  },
+  {
+    "event_type": "login_failure",
+    "host": "web-01",
+    "id": "L-005",
+    "message": "Failed password for admin",
+    "severity": "medium",
+    "src_ip": "203.0.113.50",
+    "timestamp": "2026-01-10T08:15:15Z",
+    "user": "admin"
+  },
+  {
+    "event_type": "login_failure",
+    "host": "web-01",
+    "id": "L-006",
+    "message": "Failed password for admin",
+    "severity": "medium",
+    "src_ip": "203.0.113.50",
+    "timestamp": "2026-01-10T08:15:20Z",
+    "user": "admin"
+  },
+  {
+    "event_type": "login_success",
+    "host": "web-01",
+    "id": "L-007",
+    "message": "Successful login for admin after repeated failures",
+    "severity": "high",
+    "src_ip": "203.0.113.50",
+    "timestamp": "2026-01-10T08:15:30Z",
+    "user": "admin"
+  },
+  {
+    "event_type": "privilege_change",
+    "host": "web-01",
+    "id": "L-008",
+    "message": "admin added to sudoers",
+    "severity": "high",
+    "src_ip": "203.0.113.50",
+    "timestamp": "2026-01-10T08:16:10Z",
+    "user": "admin"
+  },
+  {
+    "event_type": "login_success",
+    "host": "db-01",
+    "id": "L-009",
+    "message": "Successful login for bob",
+    "severity": "low",
+    "src_ip": "198.51.100.22",
+    "timestamp": "2026-01-10T08:20:00Z",
+    "user": "bob"
+  },
+  {
+    "event_type": "login_success",
+    "host": "web-02",
+    "id": "L-010",
+    "message": "Successful login for carol",
+    "severity": "low",
+    "src_ip": "198.51.100.30",
+    "timestamp": "2026-01-10T09:00:00Z",
+    "user": "carol"
+  },
+  {
+    "event_type": "file_download",
+    "host": "web-02",
+    "id": "L-011",
+    "message": "carol downloaded report.pdf",
+    "severity": "low",
+    "src_ip": "198.51.100.30",
+    "timestamp": "2026-01-10T09:05:00Z",
+    "user": "carol"
+  },
+  {
+    "event_type": "login_success",
+    "host": "mail-01",
+    "id": "L-012",
+    "message": "Scheduled backup login",
+    "severity": "low",
+    "src_ip": "198.51.100.99",
+    "timestamp": "2026-01-10T10:00:00Z",
+    "user": "svc-backup"
+  },
+  {
+    "event_type": "login_success",
+    "host": "vpn-01",
+    "id": "L-013",
+    "message": "Login from previously unseen location",
+    "severity": "medium",
+    "src_ip": "198.51.100.77",
+    "timestamp": "2026-01-10T11:00:00Z",
+    "user": "dave"
+  },
+  {
+    "event_type": "mfa_passed",
+    "host": "vpn-01",
+    "id": "L-014",
+    "message": "MFA challenge passed for dave",
+    "severity": "low",
+    "src_ip": "198.51.100.77",
+    "timestamp": "2026-01-10T11:02:00Z",
+    "user": "dave"
+  }
+]

@@ -1,0 +1,71 @@
+[
+  {
+    "description": "log_search times out on first call",
+    "expected_status_in": [
+      "partial",
+      "stopped"
+    ],
+    "failures": [
+      {
+        "mode": "timeout",
+        "on_call": 1,
+        "tool": "log_search"
+      }
+    ],
+    "id": "FAIL-001",
+    "investigation_id": "INV-001"
+  },
+  {
+    "description": "intel_lookup raises an error on every call",
+    "expected_status_in": [
+      "partial",
+      "stopped"
+    ],
+    "failures": [
+      {
+        "mode": "error",
+        "on_call": "all",
+        "tool": "intel_lookup"
+      }
+    ],
+    "id": "FAIL-002",
+    "investigation_id": "INV-001"
+  },
+  {
+    "description": "log_search returns malformed output on first call",
+    "expected_status_in": [
+      "partial",
+      "stopped"
+    ],
+    "failures": [
+      {
+        "mode": "malformed",
+        "on_call": 1,
+        "tool": "log_search"
+      }
+    ],
+    "id": "FAIL-003",
+    "investigation_id": "INV-002"
+  },
+  {
+    "description": "both read tools fail on every call",
+    "expected_status_in": [
+      "partial",
+      "stopped"
+    ],
+    "failures": [
+      {
+        "mode": "error",
+        "on_call": "all",
+        "tool": "log_search"
+      },
+      {
+        "mode": "timeout",
+        "on_call": "all",
+        "tool": "intel_lookup"
+      }
+    ],
+    "id": "FAIL-004",
+    "investigation_id": "INV-002"
+  }
+]

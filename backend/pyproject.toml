@@ -1,0 +1,29 @@
+[project]
+name = "gamis"
+version = "0.2.0"
+description = "Governed local multi-agent investigation system"
+requires-python = ">=3.12"
+# The P0-P5 local runtime uses SQLite and urllib from the standard library.
+dependencies = [
+    "pydantic>=2.7,<3",
+    "cryptography>=42",
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.30,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27,<1"]
+
+[project.scripts]
+gamis = "gamis.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["gamis*", "app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
