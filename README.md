@@ -1,225 +1,549 @@
-# GAMIS V4 — local governed investigation
+# GAMIS V4
+### Governed Autonomous Multi-Agent Investigation System
 
-GAMIS is a local P0–P7 synthetic investigation system. Signed grants and assignments are issued by the
-existing Authority Service; **every worker tool call must pass through the Secure Tool Gateway**. By default,
-the Supervisor and all three workers use structured JSON inference from local Ollama. Mock mode is a
-separate deterministic option; GAMIS never silently falls back to mock if Ollama is unavailable.
+**Autonomous investigation. Enforced authority. Verifiable execution.**
 
-The included end-to-end mission investigates synthetic authentication and network events and produces a
-persisted report, evidence, audit events, and signed ToolReceipts. It does not access production systems or
-perform real external actions.
+GAMIS is a governed multi-agent investigation framework designed to execute complex investigative tasks through specialized AI agents while maintaining strict boundaries around permissions, authorization, tool execution, evidence handling and accountability.
 
-## Requirements
+Unlike conventional autonomous agent systems that rely primarily on LLM instructions to control behaviour, GAMIS places governance outside the LLM. Agents can investigate, analyse and verify information, but their execution authority is independently validated by the governance layer.
 
-- Windows 10/11 with PowerShell 5.1+.
-- Python 3.12+.
-- Ollama installed locally for model-backed runs. Ollama and its model weights are **not included**.
+The objective is to combine autonomous reasoning with enforceable security boundaries and traceable execution.
 
-## Install
+---
 
-From the extracted GAMIS folder:
+## 1. The Problem
+
+Autonomous AI agents introduce significant security and reliability challenges:
+
+- **Excessive authority:** Agents may attempt operations beyond their intended responsibilities.
+- **Prompt injection:** Malicious instructions embedded in retrieved content can influence model behaviour.
+- **Uncontrolled tool execution:** Agents may invoke tools without sufficient authorization.
+- **Evidence integrity:** Investigation conclusions may lack reliable provenance.
+- **Runaway execution:** Unbounded tool calls and resource consumption can create operational risks.
+- **Insufficient accountability:** Conventional agent workflows may not provide verifiable records of execution.
+
+GAMIS addresses these challenges through an independent governance architecture that separates reasoning from authorization.
+
+---
+
+## 2. Core Architecture
+
+GAMIS follows a governance-first architecture.
+
+```text
+                 MISSION INITIATOR
+                        |
+                        v
+                   MISSION GRANT
+                        |
+                        v
+               LLM SUPERVISOR
+               (Task Proposals)
+                        |
+                        v
+              AUTHORITY SERVICE
+             (Independent Validation)
+                        |
+                        v
+              SIGNED WORK ORDERS
+                        |
+           +------------+------------+
+           |            |            |
+           v            v            v
+      RESEARCH      ANALYSIS     VERIFICATION
+       WORKER        WORKER         WORKER
+           |            |            |
+           +------------+------------+
+                        |
+                        v
+             SECURE TOOL GATEWAY
+                        |
+             +----------+----------+
+             |          |          |
+             v          v          v
+           READ       ACTION    TOOL POLICY
+           TOOLS      TOOLS     ENFORCEMENT
+             |          |
+             +----------+
+                        |
+                        v
+                EXECUTION RECEIPTS
+                        |
+             +----------+----------+
+             |                     |
+             v                     v
+       EVIDENCE STORE         AUDIT LEDGER
+             |                     |
+             +----------+----------+
+                        |
+                        v
+               INVESTIGATION REPORT
+```
+
+### Architectural Components
+
+| Component | Responsibility |
+|---|---|
+| Mission Initiator | Defines the investigation objective and constraints. |
+| Mission Grant | Establishes the maximum permitted authority. |
+| LLM Supervisor | Decomposes investigations into proposed tasks. |
+| Authority Service | Independently validates and authorizes assignments. |
+| Signed Work Orders | Bind worker identity, scope, permissions and execution limits. |
+| Specialized Workers | Perform research, analysis and verification. |
+| Secure Tool Gateway | Enforces authorization before tool execution. |
+| Evidence Store | Preserves investigation evidence and provenance. |
+| Audit Ledger | Maintains a tamper-evident execution history. |
+
+---
+
+## 3. Multi-Agent System
+
+GAMIS uses specialized workers rather than relying on a single general-purpose agent.
+
+### Research Worker — Evidence Reader
+
+Responsibilities:
+- Retrieve assigned investigation records.
+- Identify relevant events.
+- Extract supporting evidence.
+- Produce evidence-linked findings.
+
+### Analysis Worker — Intelligence Analyst
+
+Responsibilities:
+- Analyse suspicious patterns.
+- Correlate investigation records.
+- Identify potential relationships.
+- Develop analytical claims.
+
+### Verification Worker — Responder
+
+Responsibilities:
+- Examine investigation findings.
+- Check supporting evidence.
+- Identify contradictions and missing information.
+- Assess whether conclusions are adequately supported.
+
+### LLM Supervisor
+
+The supervisor coordinates the investigation and proposes task assignments.
+
+It cannot independently authorize its own requests, modify governance policies or bypass the Authority Service.
+
+---
+
+## 4. Governance and Security
+
+GAMIS separates agent reasoning from execution authority.
+
+### Independent Authorization
+
+Each worker receives a signed assignment that defines its permitted execution scope.
+
+Authorization checks include:
+
+- Mission grant validation.
+- Assignment signature verification.
+- Worker identity validation.
+- Permission enforcement.
+- Scope validation.
+- Expiry and revocation checks.
+- Resource budget enforcement.
+- Approval requirements.
+
+### Secure Tool Gateway
+
+All worker tool execution is routed through the Secure Tool Gateway.
+
+The gateway enforces:
+
+- READ and ACTION permission separation.
+- Tool registry validation.
+- Assignment and grant verification.
+- Execution budgets.
+- Approval gating for restricted actions.
+- Idempotency and replay protection.
+- Signed execution receipts.
+- Audit and evidence integration.
+
+Workers do not directly access tool adapters.
+
+### Cryptographic Accountability
+
+GAMIS uses cryptographic signing and verification to establish the integrity and provenance of assignments and execution receipts.
+
+The audit ledger uses hash chaining to make unauthorized historical modifications detectable.
+
+**Important:** A valid execution receipt establishes execution provenance and integrity; it does not independently prove that an agent's interpretation or conclusion is correct.
+
+### Prompt Injection Boundaries
+
+Retrieved documents, tool outputs and model-generated content are treated as untrusted data.
+
+Untrusted content must not be allowed to modify:
+
+- Worker permissions.
+- Mission authority.
+- Budgets.
+- Tool registry.
+- Governance policies.
+- Authorization decisions.
+
+---
+
+## 5. Evidence and Investigation Workflow
+
+GAMIS associates investigation findings with evidence references and execution provenance.
+
+The investigation workflow is:
+
+1. Receive an investigation objective.
+2. Decompose the objective into bounded tasks.
+3. Validate and authorize worker assignments.
+4. Execute research and analysis through controlled tools.
+5. Collect evidence and execution receipts.
+6. Verify findings and identify limitations.
+7. Produce an evidence-backed investigation report.
+
+Reports can contain:
+
+- Investigation objective.
+- Executive summary.
+- Worker findings.
+- Evidence references.
+- Supporting claims.
+- Confidence assessments.
+- Missing information.
+- Investigation limitations.
+- Execution receipt references.
+
+GAMIS should distinguish between observed evidence, analytical inference and unverified conclusions.
+
+---
+
+## 6. Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| Backend | Python |
+| Agent orchestration | Python-based multi-agent runtime |
+| Local LLM inference | Ollama |
+| Default configured model | Qwen 2.5 7B |
+| Cryptography | Ed25519-based signing and verification |
+| Persistence | SQLite |
+| API | Python backend API |
+| Frontend | React, TypeScript, Vite |
+| Styling | Tailwind CSS |
+| Testing | Pytest |
+
+The system supports deterministic mock execution for testing and demonstration without requiring a running LLM.
+
+Ollama provides the local inference path when configured and available.
+
+---
+
+## 7. Project Structure
+
+```text
+GAMIS/
+│
+├── backend/
+│   ├── gamis/
+│   │   ├── agents/
+│   │   ├── aggregation/
+│   │   ├── api/
+│   │   ├── audit/
+│   │   ├── authority/
+│   │   ├── core/
+│   │   ├── evaluation/
+│   │   ├── evidence/
+│   │   ├── gateway/
+│   │   ├── llm/
+│   │   ├── schemas/
+│   │   ├── security/
+│   │   ├── storage/
+│   │   ├── tools/
+│   │   ├── cli.py
+│   │   └── runtime.py
+│   │
+│   ├── app/
+│   ├── seeds/
+│   ├── tests/
+│   ├── .env.example
+│   ├── pyproject.toml
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── docs/
+│   ├── API.md
+│   ├── ARCHITECTURE.md
+│   ├── IMPLEMENTATION_STATUS.md
+│   ├── ROADMAP.md
+│   └── adr/
+│
+├── scripts/
+│   ├── run.ps1
+│   ├── start-api.ps1
+│   ├── build_source_zip.py
+│   └── generate_seeds.py
+│
+├── docker-compose.yml
+├── gamis_dashboard.html
+├── MANIFEST.json
+└── README.md
+```
+
+---
+
+## 8. Installation and Local Setup
+
+### Prerequisites
+
+- Python 3.12
+- Git
+- Windows PowerShell (for the provided scripts)
+- Ollama (for local LLM inference)
+
+### Step 1: Clone the repository
+
+```bash
+git clone https://github.com/Saumiyav01/GAMIS.git
+cd GAMIS
+```
+
+### Step 2: Create a virtual environment
 
 ```powershell
 py -3.12 -m venv .venv
+```
+
+Activate it:
+
+```powershell
 .\.venv\Scripts\Activate.ps1
+```
+
+### Step 3: Install backend dependencies
+
+```powershell
 python -m pip install --upgrade pip
 python -m pip install -e .\backend
+```
+
+### Step 4: Configure environment
+
+```powershell
 Copy-Item .\backend\.env.example .\backend\.env
 ```
 
-The source ZIP has no secrets or runtime data. By default, databases and development signing keys are
-created under `$HOME\.gamis`, outside the source tree. Set `GAMIS_HOME` to move runtime state. Never point
-`GAMIS_DEV_KEY_DIR` inside the source tree.
+Review the environment configuration before running the application.
 
-## Run with Ollama (default)
+Never commit populated environment files, private keys or credentials.
 
-1. Install Ollama using the official installer at [ollama.com](https://ollama.com/).
-2. Start the Ollama application, or run `ollama serve` in a separate terminal.
-3. Pull the configured model:
+---
 
-   ```powershell
-   ollama pull qwen2.5:7b
-   ```
+## 9. Running GAMIS
 
-4. `backend\.env` defaults to `OLLAMA_HOST=http://localhost:11434` and configures
-   `GAMIS_SUPERVISOR_MODEL` and `GAMIS_WORKER_MODEL` as `qwen2.5:7b`. Change either variable to a model
-   installed in Ollama. GAMIS checks connectivity and model availability before creating a mission. If
-   Ollama is unreachable, start the Ollama application or run `ollama serve`; if the model is missing, run
-   `ollama pull <model>`. GAMIS reports either problem and does not fall back to mock.
-5. Submit the synthetic investigation:
+### Option A: Mock Mode
 
-   ```powershell
-   .\scripts\run.ps1 mission submit
-   ```
-
-The script loads `backend\.env` and uses the repository `.venv` if present. To override the selected provider
-for one run, use `.\scripts\run.ps1 mission submit --provider ollama`.
-
-## Run without Ollama
-
-The deterministic provider requires no Ollama process or model weights:
+Mock mode enables deterministic local execution without requiring Ollama.
 
 ```powershell
 .\scripts\run.ps1 mission submit --provider mock
 ```
 
-To make mock mode the default, set `GAMIS_LLM_PROVIDER=mock` in `backend\.env`. Ollama remains the default
-provider in the supplied configuration. Supervisor and worker model names are configurable separately.
+This mode is useful for:
+- Testing the mission lifecycle.
+- Demonstrating agent orchestration.
+- Testing governance workflows.
+- Validating evidence and receipt generation.
 
-## Inspect missions
+Mock execution must not be represented as live LLM reasoning.
 
-`mission submit` prints the final report and mission ID. Use that ID with:
+### Option B: Local LLM Mode Using Ollama
+
+Install Ollama from:
+
+https://ollama.com/
+
+Start Ollama and download the configured model:
 
 ```powershell
-.\scripts\run.ps1 models --provider ollama
+ollama pull qwen2.5:7b
+```
+
+Verify available models:
+
+```powershell
+ollama list
+```
+
+Run a mission using the Ollama provider:
+
+```powershell
 .\scripts\run.ps1 mission submit --provider ollama
-.\scripts\run.ps1 mission list
-.\scripts\run.ps1 mission status MIS-<id>
-.\scripts\run.ps1 mission report MIS-<id>
-.\scripts\run.ps1 mission receipts MIS-<id>
-.\scripts\run.ps1 mission evidence MIS-<id>
-.\scripts\run.ps1 mission resume MIS-<id> --provider mock
-.\scripts\run.ps1 mission cancel MIS-<id> --reason "Operator stop"
-.\scripts\run.ps1 verify --ledger "$HOME\.gamis\audit.db" `
-    --evidence-db "$HOME\.gamis\evidence.db" --content-dir "$HOME\.gamis\evidence-objects" `
-    --trust-store "$HOME\.gamis\trust.json"
 ```
 
-`mission submit` reports the active provider and selected models. An Ollama run invokes the supervisor model
-for task decomposition, each worker model for that worker's findings, and the supervisor model again for the
-final evidence-backed assessment. `status` shows Research, Analysis, and Verification Worker task states.
-Receipts are gateway-signed and
-include request, worker, tool, permission class, outcome, and result digests. Workers persist signed P2
-EvidenceBundles containing structured claims, evidence items, and receipt references. Evidence records are
-linked to their mission, assignment, worker, and receipt. Mission status and reports are persisted in local SQLite
-databases. To revoke a grant, use `mission revoke <grant-id> --reason "..."`; the Gateway reads this
-persistent status on every execution and fails closed if activation was not durably audited.
+Live inference requires a running Ollama service and an available configured model.
 
-## Configuration
+### Mission Inspection
 
-Copy and edit `backend\.env.example`. The main settings are:
-
-| Variable | Default | Purpose |
-|---|---|---|
-| `GAMIS_LLM_PROVIDER` | `ollama` | `ollama` or deterministic `mock` |
-| `OLLAMA_HOST` | `http://localhost:11434` | Local Ollama endpoint |
-| `GAMIS_SUPERVISOR_MODEL` | `qwen2.5:7b` | Supervisor model |
-| `GAMIS_WORKER_MODEL` | `qwen2.5:7b` | Default model shared by workers |
-| `GAMIS_RESEARCH_MODEL` | unset | Optional Research Worker model override |
-| `GAMIS_ANALYSIS_MODEL` | unset | Optional Analysis Worker model override |
-| `GAMIS_VERIFICATION_MODEL` | unset | Optional Verification Worker model override |
-| `GAMIS_LLM_TIMEOUT` | `90` | Per-request timeout in seconds |
-| `GAMIS_LLM_RETRIES` | `1` | Bounded network retries |
-| `GAMIS_LLM_TEMPERATURE` | `0.2` | Ollama generation temperature (0–2) |
-| `GAMIS_LLM_CONTEXT_TOKENS` | `8192` | Ollama context limit |
-| `GAMIS_WORKER_CONCURRENCY` | `3` | Maximum scheduled workers (1–32) |
-| `GAMIS_HOME` | `$HOME\.gamis` | Persistent database, evidence, and key location |
-
-The CLI loads `backend\.env` without overriding already-set process environment variables. No hosted LLM API
-key is used. Ollama access is local HTTP. Models generate task descriptions, evidence-cited findings, and a
-final assessment only; they cannot authorize assignments, change budgets, select permissions, or execute tools.
-Generated evidence references are validated against the exact IDs collected by the worker or mission before
-they are persisted.
-
-## Live dashboard and HTTP API
-
-The supplied `gamis_dashboard.html` is served by the FastAPI adapter over the same `LocalRuntime`, mission
-store, Secure Tool Gateway, evidence store, and audit ledger used by GAMIS. The dashboard defaults to the
-same-origin API, polls actual persisted mission/worker state, and visibly reports connection or request
-errors. It never substitutes demo data after a failed request.
-
-The API and dashboard dependencies are included in `backend\pyproject.toml` and `backend\requirements.txt`.
-From the repository root in PowerShell, install as above, then:
-
-1. In `backend\.env`, choose `GAMIS_LLM_PROVIDER=mock` for an offline run, or leave `ollama` and install/start
-   Ollama separately. Ollama and its model weights are not bundled.
-2. For Ollama, in another terminal run `ollama serve` if the Ollama application is not already running, then
-   `ollama pull qwen2.5:7b` (or pull the model configured in `backend\.env`).
-3. Start the API from the repository root (the script reads `backend\.env` and uses `.venv` when present):
-
-   ```powershell
-   .\scripts\start-api.ps1
-   ```
-
-   For auto-reload during local development, run `.\scripts\start-api.ps1 -Reload`.
-
-4. Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) for the dashboard or
-   [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) for OpenAPI. Submit an investigation from Mission
-   Control and select mock or Ollama; installed Ollama models are listed and checked before creating a grant.
-5. Inspect persisted worker tasks, Gateway receipts/decisions, evidence, reports, and ledger events in their
-   corresponding dashboard pages. Mission resume/cancel are offered only through supported runtime checks.
-
-The API binds to loopback in the command above and is a local development interface, not an authenticated
-network service. It does not expose browser-triggered adapter calls, authority changes, approval decisions, or
-synthetic scenario simulation. Because this runtime has no persistent human approval queue and no GAMIS-backed
-evaluation runner, those dashboard capabilities are explicitly reported as unsupported. API schemas and route
-semantics are documented in [docs/API.md](docs/API.md).
-
-## Security and known limitations
-
-- Worker tool calls are authenticated with Ed25519 credentials and checked against signed grants and
-  assignments, including scope, expiry, revocation, tool registry integrity, operation permission, strict
-  arguments, and persistent worker/mission budgets.
-- READ and ACTION permissions are independent. ACTION requires an explicit approval provider and a stable
-  idempotency key. The sample ACTION tool is disabled; the demo issues READ-only assignments.
-- An uncertain ACTION is never retried. It remains `UNCERTAIN` until a trusted operator provides a
-  reconciliation reference; reconciliation does not redispatch it.
-- The demo uses synthetic, in-memory tool adapters. It is not a production connector and has no real external
-  action capability.
-- Development Ed25519 keys are persisted outside the source tree as unencrypted PEM files and are **not
-  production key management**. Use a protected signer/HSM before any real-world deployment.
-- Mission status, gateway budgets/idempotency/actions, evidence, reports, and audit records persist in local
-  SQLite. P3's assignment issuance ledger and worker directory remain in-memory; each CLI mission obtains a
-  new grant, and the Gateway independently checks the persistent revocation status for every call.
-- Token budgets use prompt-size estimates because Ollama token accounting is not exposed by the common
-  provider interface. Model inference cost is not billed or measured. No production guarantee is implied.
-- The mock provider verifies orchestration and security wiring, not LLM quality. Ollama model quality and
-  availability depend on the locally installed model.
-- The Supervisor's executive summary, claims, missing-information list, confidence, and conclusion are
-  model-generated. This is a decision-support report, not a confirmed incident verdict; citations must resolve
-  to persisted evidence items and gateway receipt references.
-
-## Evidence intelligence and recovery (P6/P7)
-
-- Final reports include evidence correlations by content digest, unresolved temporal/source conflicts,
-  claim-by-claim verification, model confidence kept separate from deterministic evidence-strength factors,
-  provenance, evidence gaps, and all mission evidence/receipt references. Evidence items not included in a
-  completed signed worker bundle are retained and explicitly marked as unbundled; they are not silently used as
-  claim support.
-- Mission plans, signed grants/assignments, worker/task states, reports, retry counters, cancellation state,
-  token accounting, evidence/receipt inventories, gateway usage, and action lifecycle snapshots are checkpointed
-  in SQLite. Checkpoints are append-only, digest-chained, and cross-checked against the separate audit ledger
-  before resuming.
-- Failed READ-only worker tasks may be retried once. ACTION assignments are never automatically retried, and
-  an `UNCERTAIN` action remains blocked by the Gateway's idempotency record. A reconciliation reference is an
-  operator attestation, not automatic tool read-back or proof of a real-world outcome.
-- `mission cancel` suspends the durable grant before requesting cancellation, preventing new Gateway
-  executions. `mission resume` requires an ACTIVE, unexpired, signature-valid grant and verified checkpoint;
-  it does not refresh expired assignments or reactivate suspended/revoked grants. Incomplete work that cannot
-  be safely authorized again remains partial.
-- The synthetic demo grants READ only and disables ACTION, so it has no outstanding human approval to restore.
-  Protected ACTION approvals remain request-bound and must be revalidated for each dispatch; approval tokens are
-  never replayed during recovery. The assignment issuance ledger and worker directory remain in-memory services;
-  persisted signed assignments are cryptographically checked and restored to the Authority's accounting ledger
-  during an authorized resume.
-
-See [Implementation status](docs/IMPLEMENTATION_STATUS.md), [Architecture](docs/ARCHITECTURE.md), and
-[Roadmap](docs/ROADMAP.md).
-
-## Tests
+Check mission status:
 
 ```powershell
-python -m pip install -e ".\backend[dev]"
-python -m pytest .\backend\tests
+.\scripts\run.ps1 mission status <mission_id>
 ```
 
-## Build the single source archive
-
-From the repository root, run:
+View the investigation report:
 
 ```powershell
-python .\scripts\build_source_zip.py
+.\scripts\run.ps1 mission report <mission_id>
 ```
 
-This creates `GAMIS_CONNECTED_DASHBOARD.zip` next to the repository, verifies its manifest and CRC, and
-excludes private keys, `.env`, databases, caches, Git internals, and virtual environments.
+Inspect execution receipts:
+
+```powershell
+.\scripts\run.ps1 mission receipts <mission_id>
+```
+
+Inspect evidence:
+
+```powershell
+.\scripts\run.ps1 mission evidence <mission_id>
+```
+
+---
+
+## 10. Testing
+
+GAMIS includes unit, integration, security, scenario and failure-oriented tests.
+
+Run the backend test suite:
+
+```powershell
+cd backend
+python -m pytest tests -q
+```
+
+Run the Ollama provider tests:
+
+```powershell
+python -m pytest tests/unit/test_ollama_provider.py -v
+```
+
+Run the P4/P5 integration tests:
+
+```powershell
+python -m pytest tests/integration/test_p4_p5_local.py -v
+```
+
+Run the audit ledger tests:
+
+```powershell
+python -m pytest tests/unit/test_p2_audit_ledger.py -v
+```
+
+Consult `docs/IMPLEMENTATION_STATUS.md` for the implementation status and recorded validation results.
+
+---
+
+## 11. Current Demonstration
+
+The local mock-mode demonstration completed an investigation into suspicious network events.
+
+**Mission objective:**
+
+Investigate suspicious network events and determine whether the available evidence supports a security incident.
+
+Reported execution:
+
+| Metric | Result |
+|---|---:|
+| Mission status | COMPLETE |
+| Worker reports | 3 |
+| Signed receipts | 6 |
+| Evidence items | 27 |
+| Mission confidence | 0.78 |
+
+### Investigation conclusion
+
+The synthetic records contained repeated failed login attempts followed by a successful login.
+
+The available evidence supported a possible security incident but did not establish real-world attribution, impact or completeness of the records.
+
+### Demonstrated capabilities
+
+- Three-worker mission execution.
+- Research, analysis and verification task separation.
+- Evidence collection.
+- Signed execution receipts.
+- Mission lifecycle completion.
+- Structured investigation reporting.
+
+**Demonstration limitation:** These results were obtained using synthetic data in mock mode. They do not establish live LLM performance or real-world incident detection.
+
+---
+
+## 12. Known Limitations
+
+GAMIS is an evolving research and engineering prototype, not a production-certified security platform.
+
+The current implementation has documented limitations, including:
+
+- Development-key storage requires production-grade hardening.
+- Some P3 issuance and worker-directory state remains in-memory.
+- Token budgets are estimates.
+- A production authenticated human-approval channel is not yet implemented.
+- Production external tool connectors are not included.
+- Live Ollama execution must be independently validated in the deployment environment.
+
+See `docs/IMPLEMENTATION_STATUS.md` for the detailed status.
+
+---
+
+## 13. Roadmap
+
+| Phase | Focus |
+|---|---|
+| P0 | Test harness and synthetic scenario foundation |
+| P1 | Typed schemas, cryptography and Authority Service |
+| P2 | Audit ledger and evidence storage |
+| P3 | Runtime authorization and governance |
+| P4 | Secure Tool Gateway |
+| P5 | Local multi-agent runtime and orchestration |
+| P6 | Evidence intelligence |
+| P7 | Resilience and recovery |
+
+---
+
+## 14. Design Principles
+
+GAMIS is built around five principles:
+
+1. **Governance outside the LLM:** Models propose and reason; independent services authorize.
+2. **Least privilege:** Every worker operates within a bounded assignment.
+3. **Controlled execution:** Tool calls pass through mandatory authorization checks.
+4. **Evidence-backed conclusions:** Findings retain provenance and explicit limitations.
+5. **Verifiable accountability:** Assignments, receipts and audit events support execution traceability.
+
+---
+
+## 15. Repository
+
+**GitHub:** https://github.com/Saumiyav01/GAMIS
+
+Contributions, technical feedback and research collaboration are welcome.
+
+---
+
+## License
+
+No license has been specified yet. All rights are reserved by default unless a license is added to this repository.
+
+---
+
+**GAMIS V4 — Governed autonomy with enforceable authority boundaries and verifiable execution.**
